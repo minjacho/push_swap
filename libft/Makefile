@@ -30,21 +30,25 @@ all : $(NAME)
 bonus :$(NAME_BONUS)
 
 $(NAME) : $(OBJS)
-	ar -cr $(NAME) $(OBJS)
+	@echo "LIBFT : make $(NAME)"
+	@ar -cr $(NAME) $(OBJS)
 
 $(NAME_BONUS) : $(NAME) $(OBJS_BONUS)
-	touch $(NAME_BONUS)
-	ar -cr $(NAME) $(OBJS_BONUS)
+	@echo "LIBFT : make $(NAME_BONUS)"
+	@touch $(NAME_BONUS)
+	@ar -cr $(NAME) $(OBJS_BONUS)
 
 %.o : %.c
-	$(CC) -c $<
+	@ $(CC) -c $<
 
 clean :
-	rm -f $(OBJS) $(OBJS_BONUS) $(NAME_BONUS) $(DEPS) $(DEPS_BONUS)
+	@echo "LIBFT : make clean"
+	@ rm -f $(OBJS) $(OBJS_BONUS) $(NAME_BONUS) $(DEPS) $(DEPS_BONUS)
 
 fclean :
-	make clean
-	rm -f $(NAME)
+	@echo "LIBFT : make fclean"
+	@make clean
+	@rm -f $(NAME)
 
 re :
 	make fclean

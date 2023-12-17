@@ -1,6 +1,8 @@
 .DEFAULT_GOAL := all
-SRCS = main.c # ft_pipe.c ft_parser.c ft_err_handle.c ft_split_parse.c ft_split_parse_utill.c
-SRCS_BONUS = # ft_pipe_bonus.c ft_parser_bonus.c ft_err_handle_bonus.c ft_split_parse_bonus.c ft_split_parse_utill_bonus.c
+SRCS = \
+	p_s_main.c p_s_err_handle.c p_s_init.c p_s_preprocess.c p_s_printer.c \
+	p_s_stack_utils.c
+SRCS_BONUS =
 LIBFT_DIR = ./libft
 LIBFT_NAME = ft
 LIBFT = libft/libft.a
@@ -14,33 +16,39 @@ NAME_BONUS = .bonus
 -include $(DEPS)
 
 all :
-	make $(NAME)
+	@echo "PUSH_SWAP : make $(NAME)"
+	@make $(NAME)
 
 bonus :
-	make $(NAME_BONUS)
+	@echo "PUSH_SWAP : make $(NAME_BONUS)"
+	@make $(NAME_BONUS)
 
 $(LIBFT) :
-	make -C $(LIBFT_DIR)
+	@ echo "PUSH_SWAP : make $(LIBFT)"
+	@ make -C $(LIBFT_DIR) bonus
 
 $(NAME) : $(LIBFT) $(OBJS)
-	$(CC) -o $(NAME) $(OBJS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -I$(LIBFT_DIR)
+	@$(CC) -o $(NAME) $(OBJS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -I$(LIBFT_DIR)
 
 $(NAME_BONUS) : $(LIBFT) $(OBJS_BONUS)
-	$(CC) -o $(NAME) $(OBJS_BONUS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -I$(LIBFT_DIR)
-	touch $(NAME_BONUS)
+	@$(CC) -o $(NAME) $(OBJS_BONUS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -I$(LIBFT_DIR)
+	@touch $(NAME_BONUS)
 
 %.o : %.c
-	$(CC) -c $<  -I$(LIBFT_DIR)
+	@$(CC) -c $<  -I$(LIBFT_DIR)
 
 clean :
-	rm -f $(OBJS) $(DEPS) $(OBJS_BONUS) $(DEPS_BONUS)
-	make -C $(LIBFT_DIR) clean
+	@echo "PUSH_SWAP : make clean"
+	@rm -f $(OBJS) $(DEPS) $(OBJS_BONUS) $(DEPS_BONUS)
+	@make -C $(LIBFT_DIR) clean
 
 fclean :
-	rm -f $(OBJS) $(NAME) $(DEPS) $(OBJS_BONUS) $(DEPS_BONUS) $(NAME_BONUS)
-	make -C $(LIBFT_DIR) fclean
+	@echo "PUSH_SWAP : make fclean"
+	@rm -f $(OBJS) $(NAME) $(DEPS) $(OBJS_BONUS) $(DEPS_BONUS) $(NAME_BONUS)
+	@make -C $(LIBFT_DIR) fclean
 
 re : fclean
-	make all
+	@ echo "PUSH_SWAP : make re"
+	@make all
 
 .PHONY: all clean fclean re

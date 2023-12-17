@@ -1,2 +1,4 @@
 .DS_Store
 push_swap
+*.a
+.vscode
