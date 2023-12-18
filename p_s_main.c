@@ -6,16 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 15:16:50 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/18 19:41:04 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/18 20:31:03 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-void	check_leak(void)
-{
-	system("leaks push_swap");
-}
 
 int	*sort_naive(int **arr, int size, int *sorted)
 {
@@ -29,7 +24,7 @@ int	*sort_naive(int **arr, int size, int *sorted)
 		j = 0;
 		while (j < size - 1)
 		{
-			if((*arr)[j] < (*arr)[j + 1])
+			if ((*arr)[j] < (*arr)[j + 1])
 			{
 				*sorted = 0;
 				tmp = (*arr)[j];
@@ -77,7 +72,6 @@ void	rotate_sorted(t_info *info)
 	r_i = 0;
 	while (info->a->arr[idx] != info->min)
 		idx++;
-	ft_printf("%d\n", idx);
 	if (idx + 1 > info->a->top - idx)
 	{
 		while (r_i < info->a->top - idx)
@@ -94,25 +88,19 @@ void	rotate_sorted(t_info *info)
 			r_i++;
 		}
 	}
-
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	t_info	info;
 
-	// atexit(check_leak);
 	init_origin(argc, argv, &info);
 	init_stack(&info);
-	info.op_list = NULL;
-	// print_stack(&info);
 	if (set_pivot(&info))
 		exit(EXIT_SUCCESS);
 	divide_pivot(&info);
-	// // print_stack(&info);
 	while (info.b->top > -1)
 		greedy(&info);
 	rotate_sorted(&info);
-	// print_stack(&info);
-	// exit(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }

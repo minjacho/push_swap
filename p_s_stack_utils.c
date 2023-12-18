@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:15:46 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/18 18:09:48 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/18 20:18:37 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	push(char which, t_info *info)
 	dst->arr[dst->top] = src->arr[src->top--];
 }
 
-static void	sub_rotate(int reverse, t_stack *stack)
+void	sub_rotate(int reverse, t_stack *stack)
 {
 	int	tmp;
 	int	idx;
