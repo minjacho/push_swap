@@ -10,7 +10,7 @@ OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 DEPS_BONUS = $(SRCS_BONUS:.c=.d)
-CC = cc -Wall -Wextra -Werror -MMD -MP -fsanitize=address -g
+CC = cc -Wall -Wextra -Werror -MMD -MP -g
 NAME = push_swap
 NAME_BONUS = .bonus
 -include $(DEPS)

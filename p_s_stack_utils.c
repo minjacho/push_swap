@@ -6,11 +6,17 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:15:46 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/17 17:41:29 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/18 18:09:48 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+void	rotate_swap(int reverse, char which, t_info *info)
+{
+	rotate(reverse, which, info);
+	swap(which, info);
+}
 
 void	swap(char which, t_info *info)
 {

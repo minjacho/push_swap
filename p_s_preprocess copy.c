@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_s_preprocess.c                                   :+:      :+:    :+:   */
+/*   p_s_preprocess copy.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:18:34 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/17 21:03:13 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/18 19:14:41 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,175 +36,167 @@ void	divide_pivot(t_info *info)
 		push('b', info);
 }
 
-void	get_index_of_a(t_stack *a, int num, int *op_list)
+void	get_ra_cnt(t_info *info, t_greedy *cur, int num)
 {
 	int	idx;
 
-	idx = a->top + 1;
-	while (--idx >= 0)
-		if (a->arr[idx] > num)
+	idx = info->a->top;
+	// ft_printf("%d top\n", idx);
+	while (idx >= 0)
+	{
+		if (info->a->arr[idx] > num)
 			break;
-	if (a->top - idx <= idx + 1)
-	{
-		op_list[0] = a->top - idx;
-		op_list[1] = -1;
-		op_list[2] = -1;
-		op_list[3] = a->top - idx;
+		idx--;
 	}
-	else
+	cur->ra1 = info->a->top - idx;
+	cur->rra1 = idx + 1;
+	cur->ra2 = cur->rra1 + 1;
+	cur->rra2 = cur->ra1;
+}
+
+void	filter_op_cnt(t_greedy *ops, int idx)
+{
+	if (idx == 0)
 	{
-		op_list[0] = -1;
-		op_list[1] = idx + 1;
-		op_list[2] = idx + 1;
-		op_list[3] = -1;
-		if (idx + 1 == 0)
-			op_list[2] = 1;
+		ops->rra1 = -1;
+		ops->rrb1 = -1;
+		ops->ra2 = -1;
+	}
+	if (idx == 1)
+	{
+		ops->rra1 = -1;
+		ops->rb1 = -1;
+		ops->ra2 = -1;
+	}
+	if (idx == 2)
+	{
+		ops->ra1 = -1;
+		ops->rrb1 = -1;
+		ops->rra2 = -1;
+	}
+	if (idx == 3)
+	{
+		ops->ra1 = -1;
+		ops->rb1 = -1;
+		ops->rra2 = -1;
 	}
 }
 
-void	backup_int_arr(int **dst, int **src, int size)
+int	calc_op_cnt(t_greedy *ops)
 {
+	int	op[2][2];
 	int	idx;
+	int	min[2];
 
-	idx = 0;
-	while (idx < size)
+	op[0][1] = ops->ra1 + ops->rrb1 + ops->rra2;
+	op[1][0] = ops->rra1 + ops->rb1 + ops->ra2;
+	if (ops->ra1 > ops->rb1)
+		op[0][0] = ops->ra1 + ops->rra2;
+	else
+		op[0][0] = ops->rb1 +ops->rra2;
+	if (ops->rra1 > ops->rrb1)
+		op[1][1] = ops->rra1 + ops->ra2;
+	else
+		op[1][1] = ops->rrb1 + ops->ra2;
+	idx = -1;
+	while (++idx < 4)
 	{
-		(*dst)[idx] = (*src)[idx];
-		idx++;
+		if (idx == 0 || min[0] > op[idx / 2][idx % 2])
+		{
+			min[0] = op[idx / 2][idx % 2];
+			min[1] = idx;
+		}
 	}
+	filter_op_cnt(ops, min[1]);
+	return (min[0]);
 }
 
-void	filter_op_list(int **op_list)
+int	calc_best_op_cnt(t_greedy best)
 {
-	int	sum;
-	int	rb_cnt;
-	int	rrb_cnt;
+	int	best_cnt;
 
-	sum = 0;
-	rb_cnt = (*op_list)[0];
-	rrb_cnt = (*op_list)[1];
-	if ((*op_list)[2] < 0)
-	{
-		sum = (*op_list)[3];
-		rb_cnt += (*op_list)[3];
-		if (rrb_cnt < (*op_list)[3])
-			rrb_cnt = (*op_list)[3];
-	}
+	best_cnt = 0;
+	if (best.ra1 > 0)
+		best_cnt += best.ra1;
 	else
-	{
-		sum = (*op_list)[2];
-		rrb_cnt += (*op_list)[2];
-		if (rb_cnt < (*op_list)[2])
-			rb_cnt = (*op_list)[2];
-	}
-	if (rb_cnt > rrb_cnt)
-		(*op_list)[0] = -1;
+		best_cnt += best.rra1;
+	if (best.rb1 > 0)
+		best_cnt += best.rb1;
 	else
-		(*op_list)[1] = -1;
+		best_cnt += best.rrb1;
+	if (best.ra2 > 0)
+		best_cnt += best.ra2;
+	else
+		best_cnt += best.rra2;
+	return (best_cnt);
 }
 
-void	compare_op_list(int **before, int **current)
+void	compare_op_cnt(t_greedy *best, t_greedy *cur, int is_not_fst)
 {
-	int	before_cnt;
 	int	cur_cnt;
+
+	cur_cnt = calc_op_cnt(cur);
+	if (!is_not_fst || calc_best_op_cnt(*best) > cur_cnt)
+	{
+		best->ra1 = cur->ra1;
+		best->rra1 = cur->rra1;
+		best->rb1 = cur->rb1;
+		best->rrb1 = cur->rrb1;
+		best->ra2 = cur->ra2;
+		best->rra2 = cur->rra2;
+		return ;
+	}
+}
+
+void	do_op(t_info *info, t_greedy best)
+{
 	int	idx;
 
-	before_cnt = 0;
-	cur_cnt = 0;
-	filter_op_list(current);
-	if ((*before)[0] < 0 && (*before)[1] < 0)
-		backup_int_arr(before, current, 6);
-	idx = 0;
-	while (idx < 6)
+	if (best.ra1 > 0)
 	{
-		if ((*before)[idx] > 0)
-			before_cnt += (*before)[idx];
-		if ((*current)[idx] > 0)
-			cur_cnt += (*current)[idx];
-		idx++;
+		idx = -1;
+		while (++idx < best.ra1)
+			rotate(0, 'a', info);
 	}
-	if (cur_cnt < before_cnt)
-		backup_int_arr(before, current, 6);
+	else if(best.rra1 > 0)
+	{
+		idx = -1;
+		while (++idx < best.rra1)
+			rotate(1, 'a', info);
+	}
+	if (best.rb1 > 0)
+	{
+		idx = -1;
+		while (++idx < best.rb1)
+			rotate(0, 'b', info);
+	}
+	else if(best.rrb1 > 0)
+	{
+		idx = -1;
+		while (++idx < best.rrb1)
+			rotate(1, 'b', info);
+	}
+	push('a', info);
 }
 
 void	greedy(t_info *info)
 {
-	int	idx;
-	int	*before_op_list = (int *)malloc(sizeof(int) * 6);
-	int	*op_list = (int *)malloc(sizeof(int) * 6); //rb, rrb, ra, rra, |pa| rra, ra
+	int			idx;
+	t_greedy	best;
+	t_greedy	cur;
 
+	idx = info->b->top;
 	while (info->b->top > -1)
 	{
-		idx = info->b->top;
-		while(idx > -1)
+		while (idx >= 0)
 		{
-			op_list[0] = idx - info->b->top;
-			op_list[1] = idx + 1;
-			get_index_of_a(info->a, info->b->arr[idx], &op_list[2]);
-			ft_printf("%d\n", op_list[0]);
-			ft_printf("%d\n", op_list[1]);
-			ft_printf("%d\n", op_list[2]);
-			ft_printf("%d\n", op_list[3]);
-			ft_printf("%d\n", op_list[4]);
-			ft_printf("%d\n", op_list[5]);
-			compare_op_list(before_op_list, op_list);
+			// ft_printf("%d\n", idx);
+			cur.rb1 = info->b->top - idx;
+			cur.rrb1 = idx + 1;
+			get_ra_cnt(info, &cur, info->b->arr[idx]);
+			compare_op_cnt(&best, &cur, info->b->top - idx);
 			idx--;
 		}
 	}
-	idx = 0;
-	if (before_op_list[0] > 0)
-	{
-		idx = 0;
-		while (idx < before_op_list[0])
-		{
-			rotate(0, 'a', info);
-			idx++;
-		}
-	}
-	if (before_op_list[1] > 0)
-	{
-		idx = 0;
-		while (idx < before_op_list[1])
-		{
-			rotate(1, 'a', info);
-			idx++;
-		}
-	}
-	if (before_op_list[2] > 0)
-	{
-		idx = 0;
-		while (idx < before_op_list[2])
-		{
-			rotate(0, 'b', info);
-			idx++;
-		}
-	}
-	if (before_op_list[3] > 0)
-	{
-		idx = 0;
-		while (idx < before_op_list[3])
-		{
-			rotate(1, 'b', info);
-			idx++;
-		}
-	}
-	push('a', info);
-	if (before_op_list[4] > 0)
-	{
-		idx = 0;
-		while (idx < before_op_list[4])
-		{
-			rotate(0, 'a', info);
-			idx++;
-		}
-	}
-	if (before_op_list[5] > 0)
-	{
-		idx = 0;
-		while (idx < before_op_list[5])
-		{
-			rotate(1, 'a', info);
-			idx++;
-		}
-	}
+	do_op(info, best);
 }

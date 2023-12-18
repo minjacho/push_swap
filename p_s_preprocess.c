@@ -6,11 +6,37 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:18:34 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/17 22:30:26 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/18 19:29:51 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+void	sort_three(t_info *info, t_stack *stack, char which)
+{
+	if (stack->arr[1] > stack->arr[2])
+	{
+		if (stack->arr[1] > stack->arr[0])
+		{
+			if (stack->arr[2] < stack->arr[0])
+				rotate_swap(1, which, info);
+			else
+				rotate(1, which, info);
+		}
+	}
+	else
+	{
+		if (stack->arr[2] < stack->arr[0])
+			swap(which, info);
+		else
+		{
+			if (stack->arr[1] > stack->arr[0])
+				rotate_swap(0, which, info);
+			else
+				rotate(0, which, info);
+		}
+	}
+}
 
 void	divide_pivot(t_info *info)
 {
@@ -18,7 +44,7 @@ void	divide_pivot(t_info *info)
 	int	peek;
 
 	idx = 0;
-	while (idx < info->size)
+	while (idx < info->size && info->a->top > 2)
 	{
 		peek = info->a->arr[info->a->top];
 		if (peek > info->pivot2)
@@ -32,117 +58,114 @@ void	divide_pivot(t_info *info)
 		}
 		idx++;
 	}
-	while (info->a->top > -1)
+	while (info->a->top > 2)
 		push('b', info);
+	sort_three(info, info->a, 'a');
 }
 
-void	get_index_of_a(t_stack *a, int num, int *op_list)
+void	get_ra_cnt(t_info *info, t_greedy *cur, int num)
 {
 	int	idx;
+	int	prev_num;
+	int ra;
+	int rra;
 
-	idx = a->top + 1;
-	while (--idx >= 0)
-		if (a->arr[idx] > num)
+	idx = info->a->top;
+	while (idx >= 0)
+	{
+		if (idx == info->a->top)
+			prev_num = info->a->arr[0];
+		if ((num < info->a->arr[idx] && num > prev_num) || \
+			(prev_num > info->a->arr[idx] && (num > prev_num || num < info->a->arr[idx])))
 			break;
-	if (a->top - idx <= idx + 1)
-	{
-		op_list[0] = a->top - idx;
-		op_list[1] = -1;
-		op_list[2] = -1;
-		op_list[3] = a->top - idx;
+		prev_num = info->a->arr[idx];
+		idx--;
 	}
+	ra = info->a->top - idx;
+	rra = idx + 1;
+	if (ra > rra)
+		cur->a_rotate = -rra;
 	else
-	{
-		op_list[0] = -1;
-		op_list[1] = idx + 1;
-		op_list[2] = idx + 1;
-		op_list[3] = -1;
-		if (idx + 1 == 0)
-			op_list[2] = 1;
-	}
+		cur->a_rotate = ra;
+
 }
 
-void	backup_int_arr(int **dst, int **src, int size)
-{
-	int	idx;
-
-	idx = 0;
-	while (idx < size)
-	{
-		(*dst)[idx] = (*src)[idx];
-		idx++;
-	}
-}
-
-void	filter_op_list(int **op_list)
+int	calc_op_cnt(t_greedy op)
 {
 	int	sum;
-	int	rb_cnt;
-	int	rrb_cnt;
 
 	sum = 0;
-	rb_cnt = (*op_list)[0];
-	rrb_cnt = (*op_list)[1];
-	if ((*op_list)[2] < 0)
-	{
-		sum = (*op_list)[3];
-		rb_cnt += (*op_list)[3];
-		if (rrb_cnt < (*op_list)[3])
-			rrb_cnt = (*op_list)[3];
-	}
+	if (op.a_rotate < 0)
+		sum -= op.a_rotate;
 	else
-	{
-		sum = (*op_list)[2];
-		rrb_cnt += (*op_list)[2];
-		if (rb_cnt < (*op_list)[2])
-			rb_cnt = (*op_list)[2];
-	}
-	if (rb_cnt > rrb_cnt)
-		(*op_list)[0] = -1;
+		sum += op.a_rotate;
+	if (op.b_rotate < 0)
+		sum -= op.b_rotate;
 	else
-		(*op_list)[1] = -1;
+		sum += op.b_rotate;
+	return (sum);
 }
 
-void	compare_op_list(int **before, int **current)
+void	compare_op_cnt(t_greedy *best, t_greedy *cur, int is_not_fst)
 {
-	int	before_cnt;
 	int	cur_cnt;
-	int	idx;
 
-	before_cnt = 0;
-	cur_cnt = 0;
-	filter_op_list(current);
-	if ((*before)[0] < 0 && (*before)[1] < 0)
-		backup_int_arr(before, current, 6);
-	idx = 0;
-	while (idx < 6)
+	cur_cnt = calc_op_cnt(*cur);
+	if (!is_not_fst || calc_op_cnt(*best) > cur_cnt)
 	{
-		if ((*before)[idx] > 0)
-			before_cnt += (*before)[idx];
-		if ((*current)[idx] > 0)
-			cur_cnt += (*current)[idx];
-		idx++;
+		best->a_rotate = cur->a_rotate;
+		best->b_rotate = cur->b_rotate;
+		return ;
 	}
-	if (cur_cnt < before_cnt)
-		backup_int_arr(before, current, 6);
+}
+
+void	do_op(t_info *info, t_greedy best)
+{
+	int	ra;
+	int	rb;
+
+	ra = best.a_rotate;
+	rb = best.b_rotate;
+	while (ra > 0)
+	{
+		rotate(0, 'a', info);
+		ra--;
+	}
+	while (ra < 0)
+	{
+		rotate(1, 'a', info);
+		ra++;
+	}
+	while (rb > 0)
+	{
+		rotate(0, 'b', info);
+		rb--;
+	}
+	while (rb < 0)
+	{
+		rotate(1, 'b', info);
+		rb++;
+	}
+	push('a', info);
 }
 
 void	greedy(t_info *info)
 {
-	int	idx;
-	int	before_op_list[6];
-	int	op_list[6]; //rb, rrb, ra, rra, |pa| rra, ra
+	int			idx;
+	t_greedy	best;
+	t_greedy	cur;
 
-	while (info->b->top > -1)
+	idx = info->b->top;
+	while (idx >= 0)
 	{
-		idx = info->b->top;
-		while(idx > -1)
-		{
-			op_list[0] = idx - info->b->top;
-			op_list[1] = idx + 1;
-			get_index_of_a(info->a, info->b->arr[idx], &op_list[2]);
-			compare_op_list(before_op_list, op_list);
-			idx--;
-		}
+		// ft_printf("%d\n", idx);
+		if (info->b->top - idx > idx + 1)
+			cur.b_rotate = - (idx + 1);
+		else
+			cur.b_rotate = info->b->top - idx;
+		get_ra_cnt(info, &cur, info->b->arr[idx]);
+		compare_op_cnt(&best, &cur, info->b->top - idx);
+		idx--;
 	}
+	do_op(info, best);
 }

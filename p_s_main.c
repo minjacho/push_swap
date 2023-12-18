@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 15:16:50 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/17 20:43:44 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/18 19:41:04 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	check_leak(void)
 	system("leaks push_swap");
 }
 
-int	*sort_naive(int **arr, int size)
+int	*sort_naive(int **arr, int size, int *sorted)
 {
 	int	tmp;
 	int	i;
@@ -29,8 +29,9 @@ int	*sort_naive(int **arr, int size)
 		j = 0;
 		while (j < size - 1)
 		{
-			if((*arr)[j] > (*arr)[j + 1])
+			if((*arr)[j] < (*arr)[j + 1])
 			{
+				*sorted = 0;
 				tmp = (*arr)[j];
 				(*arr)[j] = (*arr)[j + 1];
 				(*arr)[j + 1] = tmp;
@@ -42,24 +43,58 @@ int	*sort_naive(int **arr, int size)
 	return (*arr);
 }
 
-void	set_pivot(t_info *info)
+int	set_pivot(t_info *info)
 {
-	int	*sorted;
+	int	*sorted_arr;
 	int	i;
+	int	sorted;
 
-	sorted = (int *)malloc(sizeof(int) * info->size);
-	if (!sorted)
+	sorted = 1;
+	sorted_arr = (int *)malloc(sizeof(int) * info->size);
+	if (!sorted_arr)
 		exit(EXIT_FAILURE);
 	i = 0;
 	while (i < info->size)
 	{
-		sorted[i] = info->origin[i];
+		sorted_arr[i] = info->origin[i];
 		i++;
 	}
-	sorted = sort_naive(&sorted, info->size);
-	info->pivot1 = sorted[info->size / 3];
-	info->pivot2 = sorted[info->size * 2 / 3];
-	free(sorted);
+	sorted_arr = sort_naive(&sorted_arr, info->size, &sorted);
+	info->pivot2 = sorted_arr[info->size / 3];
+	info->pivot1 = sorted_arr[info->size * 2 / 3];
+	info->max = sorted_arr[0];
+	info->min = sorted_arr[info->size - 1];
+	free(sorted_arr);
+	return (sorted);
+}
+
+void	rotate_sorted(t_info *info)
+{
+	int	idx;
+	int	r_i;
+
+	idx = 0;
+	r_i = 0;
+	while (info->a->arr[idx] != info->min)
+		idx++;
+	ft_printf("%d\n", idx);
+	if (idx + 1 > info->a->top - idx)
+	{
+		while (r_i < info->a->top - idx)
+		{
+			rotate(0, 'a', info);
+			r_i++;
+		}
+	}
+	else
+	{
+		while (r_i < idx + 1)
+		{
+			rotate(1, 'a', info);
+			r_i++;
+		}
+	}
+
 }
 
 int main(int argc, char *argv[])
@@ -71,10 +106,13 @@ int main(int argc, char *argv[])
 	init_stack(&info);
 	info.op_list = NULL;
 	// print_stack(&info);
-	set_pivot(&info);
-	ft_printf("%d\t%d\n", info.pivot1, info.pivot2);
+	if (set_pivot(&info))
+		exit(EXIT_SUCCESS);
 	divide_pivot(&info);
+	// // print_stack(&info);
+	while (info.b->top > -1)
+		greedy(&info);
+	rotate_sorted(&info);
 	// print_stack(&info);
-	greedy(&info);
-	exit(EXIT_SUCCESS);
+	// exit(EXIT_SUCCESS);
 }
