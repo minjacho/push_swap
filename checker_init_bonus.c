@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_s_init.c                                         :+:      :+:    :+:   */
+/*   checker_init_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:03:49 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 15:28:46 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:08:12 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "checker.h"
 
 static char	***split_argv(int argc, char *argv[], t_info *info)
 {

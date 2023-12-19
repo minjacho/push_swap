@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 15:16:50 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/18 20:31:03 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:43:21 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	set_pivot(t_info *info)
 	sorted = 1;
 	sorted_arr = (int *)malloc(sizeof(int) * info->size);
 	if (!sorted_arr)
-		exit(EXIT_FAILURE);
+		exit_failure();
 	i = 0;
 	while (i < info->size)
 	{
@@ -93,8 +93,18 @@ void	rotate_sorted(t_info *info)
 int	main(int argc, char *argv[])
 {
 	t_info	info;
+	int		idx;
 
+	idx = 1;
+	while (idx < argc)
+	{
+		if (!is_correct_input(argv[idx]))
+			exit_failure();
+		idx++;
+	}
 	init_origin(argc, argv, &info);
+	if (check_dup(&info))
+		exit_failure();
 	init_stack(&info);
 	if (set_pivot(&info))
 		exit(EXIT_SUCCESS);

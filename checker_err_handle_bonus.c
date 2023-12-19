@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_s_err_handle.c                                   :+:      :+:    :+:   */
+/*   checker_err_handle_bonus.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:40:43 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 15:47:23 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/19 18:27:29 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "checker.h"
 
 void	free_double_ptr(char **lists)
 {
@@ -76,5 +76,11 @@ int	check_dup(t_info *info)
 void	exit_failure(void)
 {
 	write(2, "Error\n", 6);
+	exit(EXIT_FAILURE);
+}
+
+void	exit_ko(void)
+{
+	write(2, "KO\n", 2);
 	exit(EXIT_FAILURE);
 }
