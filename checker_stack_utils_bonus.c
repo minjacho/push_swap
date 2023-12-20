@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:15:46 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 16:26:49 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 15:15:14 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,19 +93,21 @@ void	sub_rotate(int reverse, t_stack *stack)
 
 void	rotate(int reverse, char which, t_info *info)
 {
-	t_stack	*stack;
-
 	if (which == 'a')
-		stack = info->a;
+	{
+		if (info->a->top > -1)
+			sub_rotate(reverse, info->a);
+	}
 	else if (which == 'b')
-		stack = info->b;
+	{
+		if (info->b->top > -1)
+			sub_rotate(reverse, info->b);
+	}
 	else
 	{
-		stack = NULL;
-		rotate(reverse, 'a', info);
-		rotate(reverse, 'b', info);
+		if (info->a->top > -1)
+			sub_rotate(reverse, info->a);
+		if (info->b->top > -1)
+			sub_rotate(reverse, info->b);
 	}
-	if (stack->top < 1)
-		return ;
-	sub_rotate(reverse, stack);
 }

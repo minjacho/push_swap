@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:03:49 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 16:08:12 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:17:55 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	init_origin(int argc, char *argv[], t_info *info)
 			idx++;
 			sub_idx = 0;
 		}
-		info->origin[origin_idx] = ft_atoi(str_num_list[idx][sub_idx]);
+		info->origin[origin_idx] = \
+			check_overflow(ft_atol(str_num_list[idx][sub_idx]));
 		sub_idx++;
 		origin_idx--;
 	}
@@ -92,4 +93,11 @@ void	init_stack(t_info *info)
 		info->a->top++;
 		idx++;
 	}
+}
+
+int	check_overflow(long long num)
+{
+	if (num > 2147483647 || num < -2147483648)
+		exit_failure();
+	return ((int)num);
 }

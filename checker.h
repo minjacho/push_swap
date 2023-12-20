@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 15:08:44 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/20 13:34:10 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:15:42 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,5 @@ void	rotate(int reverse, char which, t_info *info);
 void	sub_rotate(int reverse, t_stack *stack);
 
 void	do_op_by_input(t_info *info);
-
+int		check_overflow(long long num);
 #endif

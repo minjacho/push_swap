@@ -6,17 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:15:46 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/18 20:18:37 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:20:04 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-void	rotate_swap(int reverse, char which, t_info *info)
-{
-	rotate(reverse, which, info);
-	swap(which, info);
-}
 
 void	swap(char which, t_info *info)
 {
@@ -25,12 +19,12 @@ void	swap(char which, t_info *info)
 
 	if (which == 'a')
 	{
-		ft_printf("sa\n");
+		write(1, "sa\n", 3);
 		stack = info->a;
 	}
 	else if (which == 'b')
 	{
-		ft_printf("sb\n");
+		write(1, "sb\n", 3);
 		stack = info->b;
 	}
 	else
@@ -54,13 +48,13 @@ void	push(char which, t_info *info)
 
 	if (which == 'a')
 	{
-		ft_printf("pa\n");
+		write(1, "pa\n", 3);
 		dst = info->a;
 		src = info->b;
 	}
 	else
 	{
-		ft_printf("pb\n");
+		write(1, "pb\n", 3);
 		dst = info->b;
 		src = info->a;
 	}
@@ -99,31 +93,55 @@ void	sub_rotate(int reverse, t_stack *stack)
 	}
 }
 
-void	rotate(int reverse, char which, t_info *info)
+static void	rev_rotate(int reverse, char which, t_info *info)
 {
-	t_stack	*stack;
-
 	if (which == 'a')
 	{
-		if (reverse)
-			ft_printf("r");
-		ft_printf("ra\n");
-		stack = info->a;
+		write(1, "rra\n", 4);
+		if (info->a->top > -1)
+			sub_rotate(reverse, info->a);
 	}
 	else if (which == 'b')
 	{
-		if (reverse)
-			ft_printf("r");
-		ft_printf("rb\n");
-		stack = info->b;
+		write(1, "rrb\n", 4);
+		if (info->b->top > -1)
+			sub_rotate(reverse, info->b);
 	}
 	else
 	{
-		stack = NULL;
-		rotate(reverse, 'a', info);
-		rotate(reverse, 'b', info);
+		write(1, "rrr\n", 4);
+		if (info->a->top > -1)
+			sub_rotate(reverse, info->a);
+		if (info->b->top > -1)
+			sub_rotate(reverse, info->b);
 	}
-	if (stack->top < 1)
+}
+
+void	rotate(int reverse, char which, t_info *info)
+{
+	if (reverse)
+	{
+		rev_rotate(reverse, which, info);
 		return ;
-	sub_rotate(reverse, stack);
+	}
+	if (which == 'a')
+	{
+		write(1, "ra\n", 3);
+		if (info->a->top > -1)
+			sub_rotate(reverse, info->a);
+	}
+	else if (which == 'b')
+	{
+		write(1, "rb\n", 3);
+		if (info->b->top > -1)
+			sub_rotate(reverse, info->b);
+	}
+	else
+	{
+		write(1, "rr\n", 3);
+		if (info->a->top > -1)
+			sub_rotate(reverse, info->a);
+		if (info->b->top > -1)
+			sub_rotate(reverse, info->b);
+	}
 }

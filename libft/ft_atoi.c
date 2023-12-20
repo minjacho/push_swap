@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 16:50:25 by minjacho          #+#    #+#             */
-/*   Updated: 2023/11/14 19:07:26 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:10:48 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,32 @@ int	ft_atoi(const char *str)
 	int	i;
 	int	num;
 	int	sign;
+
+	i = 0;
+	num = 0;
+	sign = 1;
+	while (ft_isspace(str[i]))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i] && ft_isdigit(str[i]))
+	{
+		num *= 10;
+		num += (str[i] - '0') * sign;
+		i++;
+	}
+	return (num);
+}
+
+long long	ft_atol(const char *str)
+{
+	int			i;
+	long long	num;
+	int			sign;
 
 	i = 0;
 	num = 0;

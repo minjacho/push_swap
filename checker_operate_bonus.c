@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:18:34 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/20 14:27:10 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 16:59:39 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,20 @@ void	do_op_rotate(t_info *info, char *input)
 		rotate(1, 'a', info);
 	else if (ft_strncmp(input, "rrb", 3) == 0 && ft_strlen(input) == 4)
 		rotate(1, 'b', info);
-	else if (ft_strncmp(input, "rrr", 4) == 0 && ft_strlen(input) == 4)
+	else if (ft_strncmp(input, "rrr", 3) == 0 && ft_strlen(input) == 4)
 		rotate(1, 'c', info);
 	else
+	{
 		exit_failure();
+	}
 }
 
 void	do_op_by_input(t_info *info)
 {
 	char	*input;
+	int		idx;
 
+	idx = 0;
 	input = get_next_line(STDIN_FILENO);
 	while (input)
 	{
@@ -49,10 +53,9 @@ void	do_op_by_input(t_info *info)
 			push('b', info);
 		else if (ft_strncmp(input, "r", 1) == 0)
 			do_op_rotate(info, input);
-		else
-			exit_failure();
 		free(input);
 		input = get_next_line(STDIN_FILENO);
+		idx++;
 	}
 	free(input);
 }

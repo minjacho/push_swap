@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 16:11:48 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/20 14:09:46 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 16:58:56 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	put_new_read(int fd, t_store *store, int extend)
 	ssize_t	read_size;
 	ssize_t	cur_read_size;
 
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE * extend + 1));
+	buf = (char *)ft_calloc(sizeof(char), (BUFFER_SIZE * extend + 1));
 	if (!buf)
 		return (-1);
 	i = 0;

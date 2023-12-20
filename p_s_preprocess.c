@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:18:34 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/18 20:09:00 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:17:15 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,11 @@ void	divide_pivot(t_info *info)
 	while (info->a->top > 2)
 		push('b', info);
 	sort_three(info, info->a, 'a');
+}
+
+int	check_overflow(long long num)
+{
+	if (num > 2147483647 || num < -2147483648)
+		exit_failure();
+	return ((int)num);
 }

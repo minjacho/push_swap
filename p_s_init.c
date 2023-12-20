@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 12:03:49 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 15:28:46 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:16:07 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	init_origin(int argc, char *argv[], t_info *info)
 			idx++;
 			sub_idx = 0;
 		}
-		info->origin[origin_idx] = ft_atoi(str_num_list[idx][sub_idx]);
+		info->origin[origin_idx] = \
+			check_overflow(ft_atol(str_num_list[idx][sub_idx]));
 		sub_idx++;
 		origin_idx--;
 	}

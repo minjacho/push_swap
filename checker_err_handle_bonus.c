@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:40:43 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/20 13:32:33 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 17:17:58 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	is_correct_input(char *str)
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
-			if (str[i] != ' ')
+			if (!(str[i] == ' ' || str[i] == '-'))
 				return (0);
 		i++;
 	}
