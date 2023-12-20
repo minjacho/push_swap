@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 16:11:48 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/01 11:34:35 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 14:09:46 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	put_new_read(int fd, t_store *store, int extend)
 			return (-1);
 		}
 		read_size += cur_read_size;
-		if (cur_read_size < BUFFER_SIZE)
+		if (cur_read_size == 0)
 			store->eof = 1;
 		i++;
 	}
