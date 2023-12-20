@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 15:08:44 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 18:27:44 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:34:10 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,6 @@ typedef struct s_info
 	t_stack	*a;
 	t_stack	*b;
 	int		*origin;
-	int		pivot1;
-	int		pivot2;
-	int		min;
-	int		max;
 	int		size;
 }	t_info;
 
@@ -41,7 +37,6 @@ void	free_double_ptr(char **lists);
 int		is_correct_input(char *str);
 int		check_dup(t_info *info);
 void	exit_failure(void);
-void	exit_ko(void);
 
 void	init_origin(int argc, char *argv[], t_info *info);
 void	init_stack(t_info *info);

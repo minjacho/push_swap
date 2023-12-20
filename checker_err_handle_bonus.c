@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:40:43 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 18:27:29 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:32:33 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,5 @@ int	check_dup(t_info *info)
 void	exit_failure(void)
 {
 	write(2, "Error\n", 6);
-	exit(EXIT_FAILURE);
-}
-
-void	exit_ko(void)
-{
-	write(2, "KO\n", 2);
 	exit(EXIT_FAILURE);
 }

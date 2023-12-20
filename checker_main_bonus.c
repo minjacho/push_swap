@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 15:16:50 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/19 18:26:59 by minjacho         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:34:41 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,10 @@ int	check_sorted(t_info *info)
 		return (1);
 	while (i >= 0)
 	{
-		ft_printf("%d\n", info->a->arr[i]);
 		if (i != info->a->top && prev >= info->a->arr[i])
 			return (1);
 		prev = info->a->arr[i];
-		i++;
+		i--;
 	}
 	return (0);
 }
@@ -49,6 +48,10 @@ int	main(int argc, char *argv[])
 	init_stack(&info);
 	do_op_by_input(&info);
 	if (check_sorted(&info))
-		exit_ko();
+	{
+		write(1, "KO\n", 3);
+		exit(EXIT_SUCCESS);
+	}
+	write(1, "OK\n", 3);
 	exit(EXIT_SUCCESS);
 }
